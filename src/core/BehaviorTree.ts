@@ -167,7 +167,7 @@ namespace b3 {
             }
 
             /* CREATE A TICK OBJECT */
-            var tick = new Tick();
+            let tick = Tick.get();
             tick.debug = this.debug;
             tick.target = target;
             tick.blackboard = blackboard;
@@ -199,6 +199,8 @@ namespace b3 {
             /* POPULATE BLACKBOARD */
             blackboard.set('openNodes', currOpenNodes, this.id);
             blackboard.set('nodeCount', tick.nodeCount, this.id);
+
+            Tick.free(tick);
 
             return state;
         }

@@ -1,3 +1,4 @@
+/// <reference path="../utils/Pool.ts" />
 namespace b3 {
   export class Tick<Target = any> {
     tree: any;
@@ -59,6 +60,29 @@ namespace b3 {
      **/
     exitNode(node: BaseNode) {
       // TODO: call debug here
+    }
+
+    clear() {
+      this.tree = null;
+      this.debug = null;
+      this.target = null;
+      this.blackboard = null;
+      this._nodeCount = 0;
+      this._openNodes.length = 0;
+    }
+
+    static POOL_SIZE = 100;
+    static readonly pool: Pool<Tick> = new Pool<Tick>(() => new Tick());
+
+    static get() {
+      return Tick.pool.get();
+    }
+
+    static free(tick: Tick) {
+      tick.clear();
+      if (Tick.pool.size < Tick.POOL_SIZE) {
+        Tick.pool.free(tick);
+      }
     }
   }
 }
